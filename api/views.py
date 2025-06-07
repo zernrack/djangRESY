@@ -147,5 +147,59 @@ class EmployeesView(mixins.ListModelMixin, mixins.CreateModelMixin, generics.Gen
             return self.create(request)
 
 
-class EmployeeDetailView(generics.GenericAPIView):
-    pass
+class EmployeeDetailView(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, generics.GenericAPIView):
+        """
+        A view for handling individual Employee objects using Django REST Framework's mixins and generics.
+
+        This view supports:
+        - Retrieving a specific Employee object (GET method)
+        - Updating a specific Employee object (PUT method)
+        - Deleting a specific Employee object (DELETE method)
+
+        Attributes:
+            queryset: The queryset of Employee objects to be used by the view.
+            serializer_class: The serializer class to be used for serializing and deserializing Employee objects.
+        """
+        queryset = Employee.objects.all()
+        serializer_class = EmployeeSerializer
+
+        def get(self, request, pk): # pk is used when using mixins and generics
+            """
+            Handles GET requests to retrieve a specific Employee object.
+
+            Args:
+                request: The HTTP request object.
+                pk: The primary key of the Employee object to retrieve.
+
+            Returns:
+                Response: A Response object containing serialized Employee data and an HTTP 200 status.
+            """
+            return self.retrieve(request, pk)
+
+        def put(self, request, pk):
+            """
+            Handles PUT requests to update a specific Employee object.
+
+            Args:
+                request: The HTTP request object containing the updated data.
+                pk: The primary key of the Employee object to update.
+
+            Returns:
+                Response: A Response object containing the serialized data of the updated Employee and an HTTP 200 status,
+                          or errors and an HTTP 400 status if the data is invalid.
+            """
+            return self.update(request, pk)
+
+        def delete(self, request, pk):
+            """
+            Handles DELETE requests to delete a specific Employee object.
+
+            Args:
+                request: The HTTP request object.
+                pk: The primary key of the Employee object to delete.
+
+            Returns:
+                Response: A Response object with an HTTP 204 status indicating successful deletion.
+            """
+            return self.destroy(request, pk)
+
