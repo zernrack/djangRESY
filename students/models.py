@@ -13,4 +13,4 @@ class Student(models.Model):
 
     class Meta:
         verbose_name_plural = "Students"
-        ordering = ['name']
+        ordering = ['student_id']
