@@ -22,13 +22,14 @@ def studentsView(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
       return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET', 'PUT'])
+@api_view(['GET', 'PUT', 'DELETE'])
 def studentDetailView(request, student_id):
     try:
         student = Student.objects.get(pk=student_id)
     except Student.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
+    # If the request method is GET, return the student record
     if request.method == 'GET':
         serializer = StudentSerializer(student)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -42,4 +43,10 @@ def studentDetailView(request, student_id):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    # If the request method is DELETE, delete the student record
+    if request.method == 'DELETE':
+        student.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
+    # If the request method is not GET, PUT, or DELETE, return a 405 Method Not Allowed response
+    return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
